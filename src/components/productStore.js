@@ -28,4 +28,4 @@ function getProductData(id){
     }
     return productData;
 }
-export { productsArray };
+export { productsArray, getProductData };
