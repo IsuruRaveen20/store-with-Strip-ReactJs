@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { productsArray } from "./components/productStore";
+import { productsArray, getProductData } from "./components/productStore";
 
 const CartContext = createContext({
     items: [],
@@ -26,32 +26,71 @@ export function CartProvider({ children }) {
     }
 
 
-    function addOneToCart(id){
+    function addOneToCart(id) {
         const quantity = getProductQuantity(id);
 
-        if(quantity === 0){ //product is not in cart
+        if (quantity === 0) { //product is not in cart
             setCartProducts(
                 [
                     ...cartProducts, //... - spread operator - meaning - take all of the objects already in our cart and put them front of the array
                     {
                         id: id,
-                        quantity:1
+                        quantity: 1
                     }
                 ]
             )
-        }else { //product is in cart 
+        } else { //product is in cart 
             //[ {id:1, quantity:3} ] , [ { id:2, quantity: 1 + 1} ]
             setCartProducts(
                 cartProducts.map(
                     product =>
-                    product.id === id                               //if condition
-                    ? { ...product, quantity: product.quantity + 1} //if statement is true
-                    : product                                       //if statement is false
+                        product.id === id                               //if condition
+                            ? { ...product, quantity: product.quantity + 1 } //if statement is true
+                            : product                                       //if statement is false
                 )
             )
         }
     }
 
+    function removeOneFromCart(id) {
+        const quantity = getProductQuantity(id);
+
+        if (quantity == 1) {
+            deleteFromCart(id);
+        } else {
+            setCartProducts(
+                cartProducts.map(
+                    product =>
+                        product.id === id                                       //if condition
+                            ? { ...product, quantity: product.quantity - 1 }    //if statement is true
+                            : product                                            //if statement is false
+                )
+            )
+        }
+    }
+
+    function deleteFromCart(id) {
+        // []if an object meets a condition, add the object to array
+        // [product1, product2, product3]
+        // [product1, product2]
+        setCartProducts(
+            cartProducts =>
+                cartProducts.filter(currentProduct => {
+                    return currentProduct.id != id;
+                })
+        )
+    }
+
+
+    function getTotalCost() {
+        let totalCost = 0;
+        cartProducts.map((cartItem) => {
+            const productData = getProductData(cartItem.id);
+            totalCost += (productData.price * cartItem.quantity);
+        });
+
+        return totalCost;
+    }
 
     const contextValue = {
         items: cartProducts,
@@ -69,5 +108,6 @@ export function CartProvider({ children }) {
     )
 }
 
+export default CartProvider;
 //context (cart, addToCart, removeCart)
 //Provider -> gives your React app access to all the things in your context
