@@ -10,8 +10,8 @@ function Store() {
             <Row xs={1} md={3} className="g-4">
                 {/* parenthesis use to return jsx elements immediately */}
                 {productsArray.map((product, idx) => (
-                    <Col align="center">
-                        <h1>{product.title}</h1>
+                    <Col align="center" key={idx}>
+                        <ProductCard product={product}/>
                     </Col>
                 ))}
             </Row>
