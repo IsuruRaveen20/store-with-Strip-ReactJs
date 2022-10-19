@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
-import { productsArray, getProductData } from "./components/productStore";
+import { productsArray, getProductData } from './productStore';
 
-const CartContext = createContext({
+export const CartContext = createContext({
     items: [],
     getProductQuantity: () => { }, //this function does not have no logic. bcz we can't define functions inside the context
     addOneToCart: () => { },
